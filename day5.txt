@@ -1,0 +1,468 @@
+mysql> use da;
+Database changed
+
+INSERT:
+=======
+approach-1: insert into table-name(column1,column2,.....column-n) values(value1,value2,....value-n)mysql> show tables;
++---------------+
+| Tables_in_da  |
++---------------+
+| company_staff |
+| employee      |
++---------------+
+2 rows in set (0.00 sec)
+
+mysql> DESC EMPLOYEE;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| empId     | char(5)     | YES  |     | NULL    |       |
+| firstname | varchar(30) | YES  |     | NULL    |       |
+| lastname  | varchar(30) | YES  |     | NULL    |       |
+| age       | int         | YES  |     | NULL    |       |
+| doj       | date        | YES  |     | NULL    |       |
+| address   | tinytext    | YES  |     | NULL    |       |
+| dept      | varchar(20) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> INSERT INTO EMPLOYEE(EMPID,FIRSTNAME,LASTNAME,AGE,DOJ,ADDRESS,DEPT)
+    -> VALUES
+    -> ('E001','NEHA','PRIYA',21,'2026-05-11')
+    -> ^C
+mysql> INSERT INTO EMPLOYEE(EMPID,FIRSTNAME,LASTNAME,AGE,DOJ,ADDRESS,DEPT)
+    -> VALUES
+    -> ('E001','NEHA','PRIYA',21,'2026-05-11');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> INSERT INTO EMPLOYEE(EMPID,FIRSTNAME,LASTNAME,AGE,DOJ,ADDRESS,DEPT)
+    -> VALUES
+    -> ('E001','NEHA','PRIYA',21,'2026-05-11','VSP','CSE');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> SELECT * FROM EMPLOYEE;
++-------+-----------+----------+------+------------+---------+------+
+| empId | firstname | lastname | age  | doj        | address | dept |
++-------+-----------+----------+------+------------+---------+------+
+| E001  | NEHA      | PRIYA    |   21 | 2026-05-11 | VSP     | CSE  |
++-------+-----------+----------+------+------------+---------+------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO EMPLOYEE(EMPID,FIRSTNAME,LASTNAME,AGE,DOJ,ADDRESS,DEPT)
+    -> VALUES
+    -> ('E002','HARI','PRIYA',21,'2026-05-12','VSP','CSE'),
+    -> ('E003','ABHI','K',22,'2026-04-12','VSP','CSM');
+Query OK, 2 rows affected (0.04 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM EMPLOYEE;
++-------+-----------+----------+------+------------+---------+------+
+| empId | firstname | lastname | age  | doj        | address | dept |
++-------+-----------+----------+------+------------+---------+------+
+| E001  | NEHA      | PRIYA    |   21 | 2026-05-11 | VSP     | CSE  |
+| E002  | HARI      | PRIYA    |   21 | 2026-05-12 | VSP     | CSE  |
+| E003  | ABHI      | K        |   22 | 2026-04-12 | VSP     | CSM  |
++-------+-----------+----------+------+------------+---------+------+
+3 rows in set (0.00 sec)
+
+mysql> DESC COMPANY_STAFF;
++-----------------+---------------------------------------------------+------+-----+---------+-------+
+| Field           | Type                                              | Null | Key | Default | Extra |
++-----------------+---------------------------------------------------+------+-----+---------+-------+
+| COMPANY_NAME    | varchar(20)                                       | YES  |     | NULL    |       |
+| EMPID           | int                                               | YES  |     | NULL    |       |
+| AGE             | tinytext                                          | YES  |     | NULL    |       |
+| EXPERIENCE      | smallint                                          | YES  |     | NULL    |       |
+| GENDER          | char(1)                                           | YES  |     | NULL    |       |
+| EMPLOYEE_NAME   | varchar(60)                                       | YES  |     | NULL    |       |
+| QUALIFICATION   | varchar(20)                                       | YES  |     | NULL    |       |
+| ADDRESS         | tinytext                                          | YES  |     | NULL    |       |
+| SALARY          | decimal(10,4)                                     | YES  |     | NULL    |       |
+| DEPT            | enum('HR','IT','SALES','FINANCE','SUPPORT')       | YES  |     | NULL    |       |
+| STATUS          | varchar(20)                                       | YES  |     | NULL    |       |
+| SKILLS          | set('JAVA','PYTHON','SQL','EXCEL','COMUNICATION') | YES  |     | NULL    |       |
+| DATE_OF_JOINING | date                                              | YES  |     | NULL    |       |
+| EMAIL           | varchar(30)                                       | YES  |     | NULL    |       |
++-----------------+---------------------------------------------------+------+-----+---------+-------+
+14 rows in set (0.00 sec)
+
+mysql> INSERT INTO COMPANY_STAFF(COMPANY_NAME,EMPID,AGE,EXPERIENCE,GENDER,EMPLOYEE_NAME,QUALIFICATION,ADDRESS,SALARY,DEPT,STATUS,SKILLS,DATE_OF_JOINING,EMAIL)
+    -> VALUES
+    -> ('TCS',235,21,4,'F','NEHA','BTECH','VSP',50000,'IT','FRESHER','SQL','2026-7-23','NEHA@GMAIL.COM');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM COMPANY_STAFF;
++--------------+-------+------+------------+--------+---------------+---------------+---------+------------+------+---------+--------+-----------------+----------------+
+| COMPANY_NAME | EMPID | AGE  | EXPERIENCE | GENDER | EMPLOYEE_NAME | QUALIFICATION | ADDRESS | SALARY     | DEPT | STATUS  | SKILLS | DATE_OF_JOINING | EMAIL          |
++--------------+-------+------+------------+--------+---------------+---------------+---------+------------+------+---------+--------+-----------------+----------------+
+| TCS          |   235 | 21   |          4 | F      | NEHA          | BTECH         | VSP     | 50000.0000 | IT   | FRESHER | SQL    | 2026-07-23      | NEHA@GMAIL.COM |
++--------------+-------+------+------------+--------+---------------+---------------+---------+------------+------+---------+--------+-----------------+----------------+
+1 row in set (0.00 sec)
+
+
+
+APPROACH-2
+==============
+INSERT INTO TABLE-NAME VALUES(VALUE1,VALUE2,.....VALUE-N);
+
+mysql> INSERT INTO EMPLOYEE VALUES
+    -> ('E004','RAMU','N','25','2025-8-7','HYD','IT');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> SELECT * FROM EMPLOYEE;
++-------+-----------+----------+------+------------+---------+------+
+| empId | firstname | lastname | age  | doj        | address | dept |
++-------+-----------+----------+------+------------+---------+------+
+| E001  | NEHA      | PRIYA    |   21 | 2026-05-11 | VSP     | CSE  |
+| E002  | HARI      | PRIYA    |   21 | 2026-05-12 | VSP     | CSE  |
+| E003  | ABHI      | K        |   22 | 2026-04-12 | VSP     | CSM  |
+| EOO5  | RANI      | USHA     |   24 | 2024-06-24 | HYD     | IT   |
+| E004  | RAMU      | N        |   25 | 2025-08-07 | HYD     | IT   |
+| EOO6  | PREMA     | SRI      |   24 | 2024-06-24 | HYD     | IT   |
+| E004  | RAMU      | N        |   25 | 2025-08-07 | HYD     | IT   |
++-------+-----------+----------+------+------------+---------+------+
+7 rows in set (0.00 sec)
+
+
+APPROACH-3
+=============
+INSERT INTO TABLE-NAME(PARTICULAR COLUMNS YOU REQUIRED) VALUES(PARTICULAR VALUES);
+INSERT INTO EMPLOYEE(FIRSTNAME,DOJ,LASTNAME,EMPID,ADDRESS) 
+VALUES
+('SAI','2023-07-6','PRIYA','E007','VJD');mysql> INSERT INTO EMPLOYEE(FIRSTNAME,DOJ,LASTNAME,EMPID,ADDRESS) 
+    -> VALUES
+    -> ('SRI','2023-07-6','PRIYA','E009','VJD');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> SELECT * FROM EMPLOYEE;
++-------+-----------+----------+------+------------+---------+------+
+| empId | firstname | lastname | age  | doj        | address | dept |
++-------+-----------+----------+------+------------+---------+------+
+| E001  | NEHA      | PRIYA    |   21 | 2026-05-11 | VSP     | CSE  |
+| E002  | HARI      | PRIYA    |   21 | 2026-05-12 | VSP     | CSE  |
+| E003  | ABHI      | K        |   22 | 2026-04-12 | VSP     | CSM  |
+| EOO5  | RANI      | USHA     |   24 | 2024-06-24 | HYD     | IT   |
+| E004  | RAMU      | N        |   25 | 2025-08-07 | HYD     | IT   |
+| EOO6  | PREMA     | SRI      |   24 | 2024-06-24 | HYD     | IT   |
+| E004  | RAMU      | N        |   25 | 2025-08-07 | HYD     | IT   |
+| E007  | SAI       | PRIYA    | NULL | 2023-07-06 | VJD     | NULL |
+| E008  | NISHA     | NULL     |   34 | NULL       | VJD     | ECE  |
+| E009  | SRI       | PRIYA    | NULL | 2023-07-06 | VJD     | NULL |
++-------+-----------+----------+------+------------+---------+------+
+10 rows in set (0.00 sec)
+
+APPROACH-4
+============
+INSERT INTO TABLE-NAME SET COLUMN-NAME=VALUE,COLUMN-NAME=VALUE.....;mysql> INSERT INTO EMPLOYEE SET EMPID='E010',FIRSTNAME='NERRU',LASTNAME='RAJ',AGE=25,DOJ='2024-06-01',ADDRESS='VSP',DEPT='ECE';
+Query OK, 1 row affected (0.03 sec)
+
+mysql> SELECT * FROM EMPLOYEE;
++-------+-----------+----------+------+------------+---------+------+
+| empId | firstname | lastname | age  | doj        | address | dept |
++-------+-----------+----------+------+------------+---------+------+
+| E001  | NEHA      | PRIYA    |   21 | 2026-05-11 | VSP     | CSE  |
+| E002  | HARI      | PRIYA    |   21 | 2026-05-12 | VSP     | CSE  |
+| E003  | ABHI      | K        |   22 | 2026-04-12 | VSP     | CSM  |
+| EOO5  | RANI      | USHA     |   24 | 2024-06-24 | HYD     | IT   |
+| E004  | RAMU      | N        |   25 | 2025-08-07 | HYD     | IT   |
+| EOO6  | PREMA     | SRI      |   24 | 2024-06-24 | HYD     | IT   |
+| E004  | RAMU      | N        |   25 | 2025-08-07 | HYD     | IT   |
+| E007  | SAI       | PRIYA    | NULL | 2023-07-06 | VJD     | NULL |
+| E008  | NISHA     | NULL     |   34 | NULL       | VJD     | ECE  |
+| E009  | SRI       | PRIYA    | NULL | 2023-07-06 | VJD     | NULL |
+| E010  | NERRU     | RAJ      |   25 | 2024-06-01 | VSP     | ECE  |
++-------+-----------+----------+------+------------+---------+------+
+11 rows in set (0.00 sec)
+
+
+UPDATE:
+=========
+SYNTAX: UPDATE TABLE-NAME SET COLUMN-NAME=VALUE WHERE CONDITION;mysql> UPDATE EMPLOYEE SAY LASTNAME=N WHERE FIRSTNAME=SAI;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'LASTNAME=N WHERE FIRSTNAME=SAI' at line 1
+mysql> UPDATE EMPLOYEE SAY LASTNAME='N' WHERE FIRSTNAME='SAI';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'LASTNAME='N' WHERE FIRSTNAME='SAI'' at line 1
+mysql> UPDATE EMPLOYEE SET LASTNAME='N' WHERE FIRSTNAME='SAI';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM EMPLOYEE;
++-------+-----------+----------+------+------------+---------+------+
+| empId | firstname | lastname | age  | doj        | address | dept |
++-------+-----------+----------+------+------------+---------+------+
+| E001  | NEHA      | PRIYA    |   21 | 2026-05-11 | VSP     | CSE  |
+| E002  | HARI      | PRIYA    |   21 | 2026-05-12 | VSP     | CSE  |
+| E003  | ABHI      | K        |   22 | 2026-04-12 | VSP     | CSM  |
+| EOO5  | RANI      | USHA     |   24 | 2024-06-24 | HYD     | IT   |
+| E004  | RAMU      | N        |   25 | 2025-08-07 | HYD     | IT   |
+| EOO6  | PREMA     | SRI      |   24 | 2024-06-24 | HYD     | IT   |
+| E004  | RAMU      | N        |   25 | 2025-08-07 | HYD     | IT   |
+| E007  | SAI       | N        | NULL | 2023-07-06 | VJD     | NULL |
+| E008  | NISHA     | NULL     |   34 | NULL       | VJD     | ECE  |
+| E009  | SRI       | PRIYA    | NULL | 2023-07-06 | VJD     | NULL |
+| E010  | NERRU     | RAJ      |   25 | 2024-06-01 | VSP     | ECE  |
++-------+-----------+----------+------+------------+---------+------+
+11 rows in set (0.00 sec)
+
+mysql> UPDATE EMPLOYEE SET EMPID='E008' WHERE AGE=47;
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> SELECT * FROM EMPLOYEE;
++-------+-----------+----------+------+------------+---------+------+
+| empId | firstname | lastname | age  | doj        | address | dept |
++-------+-----------+----------+------+------------+---------+------+
+| E001  | NEHA      | PRIYA    |   21 | 2026-05-11 | VSP     | CSE  |
+| E002  | HARI      | PRIYA    |   21 | 2026-05-12 | VSP     | CSE  |
+| E003  | ABHI      | K        |   22 | 2026-04-12 | VSP     | CSM  |
+| EOO5  | RANI      | USHA     |   24 | 2024-06-24 | HYD     | IT   |
+| E004  | RAMU      | N        |   25 | 2025-08-07 | HYD     | IT   |
+| EOO6  | PREMA     | SRI      |   24 | 2024-06-24 | HYD     | IT   |
+| E004  | RAMU      | N        |   25 | 2025-08-07 | HYD     | IT   |
+| E007  | SAI       | N        | NULL | 2023-07-06 | VJD     | NULL |
+| E008  | NISHA     | NULL     |   34 | NULL       | VJD     | ECE  |
+| E009  | SRI       | PRIYA    | NULL | 2023-07-06 | VJD     | NULL |
+| E010  | NERRU     | RAJ      |   25 | 2024-06-01 | VSP     | ECE  |
++-------+-----------+----------+------+------------+---------+------+
+11 rows in set (0.00 sec)
+
+mysql> UPDATE EMPLOYEE SET AGE=47 WHERE EMPID='E008';
+Query OK, 1 row affected (0.04 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM EMPLOYEE;
++-------+-----------+----------+------+------------+---------+------+
+| empId | firstname | lastname | age  | doj        | address | dept |
++-------+-----------+----------+------+------------+---------+------+
+| E001  | NEHA      | PRIYA    |   21 | 2026-05-11 | VSP     | CSE  |
+| E002  | HARI      | PRIYA    |   21 | 2026-05-12 | VSP     | CSE  |
+| E003  | ABHI      | K        |   22 | 2026-04-12 | VSP     | CSM  |
+| EOO5  | RANI      | USHA     |   24 | 2024-06-24 | HYD     | IT   |
+| E004  | RAMU      | N        |   25 | 2025-08-07 | HYD     | IT   |
+| EOO6  | PREMA     | SRI      |   24 | 2024-06-24 | HYD     | IT   |
+| E004  | RAMU      | N        |   25 | 2025-08-07 | HYD     | IT   |
+| E007  | SAI       | N        | NULL | 2023-07-06 | VJD     | NULL |
+| E008  | NISHA     | NULL     |   47 | NULL       | VJD     | ECE  |
+| E009  | SRI       | PRIYA    | NULL | 2023-07-06 | VJD     | NULL |
+| E010  | NERRU     | RAJ      |   25 | 2024-06-01 | VSP     | ECE  |
++-------+-----------+----------+------+------------+---------+------+
+11 rows in set (0.00 sec)
+
+mysql> UPDATE EMPLOYEE SET DEPT='IT' WHERE ADDRESS='VJD';
+Query OK, 3 rows affected (0.04 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+mysql> SELECT * FROM EMPLOYEE;
++-------+-----------+----------+------+------------+---------+------+
+| empId | firstname | lastname | age  | doj        | address | dept |
++-------+-----------+----------+------+------------+---------+------+
+| E001  | NEHA      | PRIYA    |   21 | 2026-05-11 | VSP     | CSE  |
+| E002  | HARI      | PRIYA    |   21 | 2026-05-12 | VSP     | CSE  |
+| E003  | ABHI      | K        |   22 | 2026-04-12 | VSP     | CSM  |
+| EOO5  | RANI      | USHA     |   24 | 2024-06-24 | HYD     | IT   |
+| E004  | RAMU      | N        |   25 | 2025-08-07 | HYD     | IT   |
+| EOO6  | PREMA     | SRI      |   24 | 2024-06-24 | HYD     | IT   |
+| E004  | RAMU      | N        |   25 | 2025-08-07 | HYD     | IT   |
+| E007  | SAI       | N        | NULL | 2023-07-06 | VJD     | IT   |
+| E008  | NISHA     | NULL     |   47 | NULL       | VJD     | IT   |
+| E009  | SRI       | PRIYA    | NULL | 2023-07-06 | VJD     | IT   |
+| E010  | NERRU     | RAJ      |   25 | 2024-06-01 | VSP     | ECE  |
++-------+-----------+----------+------+------------+---------+------+
+11 rows in set (0.00 sec)
+
+mysql> UPDATE EMPLOYEE SET DOJ='2026-6-27' WHERE EMPID='E009';
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM EMPLOYEE;
++-------+-----------+----------+------+------------+---------+------+
+| empId | firstname | lastname | age  | doj        | address | dept |
++-------+-----------+----------+------+------------+---------+------+
+| E001  | NEHA      | PRIYA    |   21 | 2026-05-11 | VSP     | CSE  |
+| E002  | HARI      | PRIYA    |   21 | 2026-05-12 | VSP     | CSE  |
+| E003  | ABHI      | K        |   22 | 2026-04-12 | VSP     | CSM  |
+| EOO5  | RANI      | USHA     |   24 | 2024-06-24 | HYD     | IT   |
+| E004  | RAMU      | N        |   25 | 2025-08-07 | HYD     | IT   |
+| EOO6  | PREMA     | SRI      |   24 | 2024-06-24 | HYD     | IT   |
+| E004  | RAMU      | N        |   25 | 2025-08-07 | HYD     | IT   |
+| E007  | SAI       | N        | NULL | 2023-07-06 | VJD     | IT   |
+| E008  | NISHA     | NULL     |   47 | NULL       | VJD     | IT   |
+| E009  | SRI       | PRIYA    | NULL | 2026-06-27 | VJD     | IT   |
+| E010  | NERRU     | RAJ      |   25 | 2024-06-01 | VSP     | ECE  |
++-------+-----------+----------+------+------------+---------+------+
+11 rows in set (0.00 sec)
+
+
+DELETE:
+=-=-=-=-=-=-=
+SYNTAX: DELETE FROM TABLE-NAME WHERE CONDITION;mysql> DELETE FROM EMPLOYEE WHERE EMPID='E004';
+Query OK, 2 rows affected (0.03 sec)
+
+mysql> SELECT * FROM EMPLOYEE;
++-------+-----------+----------+------+------------+---------+------+
+| empId | firstname | lastname | age  | doj        | address | dept |
++-------+-----------+----------+------+------------+---------+------+
+| E001  | NEHA      | PRIYA    |   21 | 2026-05-11 | VSP     | CSE  |
+| E002  | HARI      | PRIYA    |   21 | 2026-05-12 | VSP     | CSE  |
+| E003  | ABHI      | K        |   22 | 2026-04-12 | VSP     | CSM  |
+| EOO5  | RANI      | USHA     |   24 | 2024-06-24 | HYD     | IT   |
+| EOO6  | PREMA     | SRI      |   24 | 2024-06-24 | HYD     | IT   |
+| E007  | SAI       | N        | NULL | 2023-07-06 | VJD     | IT   |
+| E008  | NISHA     | NULL     |   47 | NULL       | VJD     | IT   |
+| E009  | SRI       | PRIYA    | NULL | 2026-06-27 | VJD     | IT   |
+| E010  | NERRU     | RAJ      |   25 | 2024-06-01 | VSP     | ECE  |
++-------+-----------+----------+------+------------+---------+------+
+9 rows in set (0.00 sec)
+
+mysql> DELETE FROM EMPLOYEE WHERE FIRSTNAME='SAI';
+Query OK, 1 row affected (0.03 sec)
+
+mysql> SELECT * FROM EMPLOYEE;
++-------+-----------+----------+------+------------+---------+------+
+| empId | firstname | lastname | age  | doj        | address | dept |
++-------+-----------+----------+------+------------+---------+------+
+| E001  | NEHA      | PRIYA    |   21 | 2026-05-11 | VSP     | CSE  |
+| E002  | HARI      | PRIYA    |   21 | 2026-05-12 | VSP     | CSE  |
+| E003  | ABHI      | K        |   22 | 2026-04-12 | VSP     | CSM  |
+| EOO5  | RANI      | USHA     |   24 | 2024-06-24 | HYD     | IT   |
+| EOO6  | PREMA     | SRI      |   24 | 2024-06-24 | HYD     | IT   |
+| E008  | NISHA     | NULL     |   47 | NULL       | VJD     | IT   |
+| E009  | SRI       | PRIYA    | NULL | 2026-06-27 | VJD     | IT   |
+| E010  | NERRU     | RAJ      |   25 | 2024-06-01 | VSP     | ECE  |
++-------+-----------+----------+------+------------+---------+------+
+8 rows in set (0.00 sec)
+
+mysql> TRUNCATE TABLE COMPANY
+    -> ^C
+mysql> TRUNCATE TABLE COMPANY_STAFF;
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> SELECT * FROM COMPANY_STAFF;
+Empty set (0.00 sec)
+
+mysql> TRUNCATE TABLE EMPLOYEE;
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> SELECT * FROM EMPLOYEE;
+Empty set (0.00 sec)
+
+mysql> DROP TABLE EMPLOYEE;
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> SELECT * FROM EMPLOYEE;
+ERROR 1146 (42S02): Table 'da.employee' doesn't exist
+mysql> CREATE TABLE EMPLOYEE()
+    -> ^C
+mysql> CREATE TABLE EMPLOYEE(
+    -> EMPID INT AUTO_INCREMENT,
+    -> ^C
+mysql> CREATE TABLE EMPLOYEE(
+    -> EMPID INT AUTO_INCREMENT PRIMARY KEY,
+    -> NAME VARCHAR(100),
+    -> DEPARTMENT VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> DESC EMPLOYEE;
++------------+--------------+------+-----+---------+----------------+
+| Field      | Type         | Null | Key | Default | Extra          |
++------------+--------------+------+-----+---------+----------------+
+| EMPID      | int          | NO   | PRI | NULL    | auto_increment |
+| NAME       | varchar(100) | YES  |     | NULL    |                |
+| DEPARTMENT | varchar(50)  | YES  |     | NULL    |                |
++------------+--------------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO EMPLOYEE (NAME,DEPARTMENT)
+    -> VALUES
+    -> ('NEHA','IT')
+    -> ('PRIYA','HR');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '('PRIYA','HR')' at line 4
+mysql> INSERT INTO EMPLOYEE (NAME,DEPARTMENT)
+    -> VALUES
+    -> ('NEHA','IT'),
+    -> ('PRIYA','HR');
+Query OK, 2 rows affected (0.04 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM EMPLOYEE;
++-------+-------+------------+
+| EMPID | NAME  | DEPARTMENT |
++-------+-------+------------+
+|     1 | NEHA  | IT         |
+|     2 | PRIYA | HR         |
++-------+-------+------------+
+2 rows in set (0.00 sec)
+
+mysql> CREATE TABLE BACKUPEMPLOYEE S
+    -> SELECT * FROM EMPLOYEE;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'S
+SELECT * FROM EMPLOYEE' at line 1
+mysql> CREATE TABLE BACKUPEMPLOYEE AS
+    -> SELECT * FROM EMPLOYEE;
+Query OK, 2 rows affected (0.07 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> DESC BACKUPEMPLOYEE;
++------------+--------------+------+-----+---------+-------+
+| Field      | Type         | Null | Key | Default | Extra |
++------------+--------------+------+-----+---------+-------+
+| EMPID      | int          | NO   |     | 0       |       |
+| NAME       | varchar(100) | YES  |     | NULL    |       |
+| DEPARTMENT | varchar(50)  | YES  |     | NULL    |       |
++------------+--------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM BACKUPEMPLOYEE;
++-------+-------+------------+
+| EMPID | NAME  | DEPARTMENT |
++-------+-------+------------+
+|     1 | NEHA  | IT         |
+|     2 | PRIYA | HR         |
++-------+-------+------------+
+2 rows in set (0.00 sec)
+
+
+COMPUTED COLUMNS
+=-=-=-=-=-=-=-==-=--
+mysql> CREATE TABLE PRODUCTS(
+    -> PRODUCTID INT PRIMARY KEY,
+    -> PRICE DECIMAL(10,2),
+    -> QUANTITY INT,
+    -> TOTALAMOUNT DECIMAL(10,2) GENERATED ALWAYS AS(PRICE*QUANTITY) STORED
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> INSERT INTO PRODUCTS(PRODUCTID,PRICE,QUANTITY)
+    -> VALUES
+    -> (1,50,3)
+    -> (2,200.35,6);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(2,200.35,6)' at line 4
+mysql> INSERT INTO PRODUCTS(PRODUCTID,PRICE,QUANTITY)
+    -> VALUES
+    -> (1,50,3),
+    -> (2,200.35,6);
+Query OK, 2 rows affected (0.04 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM PRODUCTS;
++-----------+--------+----------+-------------+
+| PRODUCTID | PRICE  | QUANTITY | TOTALAMOUNT |
++-----------+--------+----------+-------------+
+|         1 |  50.00 |        3 |      150.00 |
+|         2 | 200.35 |        6 |     1202.10 |
++-----------+--------+----------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> UPDATE PRODUCTS SET PRICE=500 WHERE PRODUCTID=1;
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM PRODUCTS;
++-----------+--------+----------+-------------+
+| PRODUCTID | PRICE  | QUANTITY | TOTALAMOUNT |
++-----------+--------+----------+-------------+
+|         1 | 500.00 |        3 |     1500.00 |
+|         2 | 200.35 |        6 |     1202.10 |
++-----------+--------+----------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> Terminal close -- exit!
