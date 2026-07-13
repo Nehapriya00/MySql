@@ -1,0 +1,154 @@
+DAY-3
+======
+SQL IDENTIFIERS:
+----------------
+identifiers are name used to identify data base objects such as database names or table names or columns names or view names, index names,
+constraints, triggers, stored procedures.
+while we are declaring identifiers we have to follow some rules and regulations.
+1.identifiers can contain a-z or A-Z or 0-9, _ ,$
+2.must be began with a letter or underscore(_)
+3.we cant declare identifiers with reserved keywords
+4.spaces are not considered to declare identifiers
+5.identifiers are case-sensitive
+6.max length to declare identifiers are 15 characters.
+
+
+SQL- Structured Query Language:
+--------------------------------
+SQL is a standardized programming language specially designed for managing and manupilating relational databases it provides declarative syntax
+that allows users to define what data they want to retrive,insert, update or delete without specifying exactly how databse executes this operations.
+
+Types of SQL Commands
+-----------------------
+1.DDL--->create, alter,drop,truncate,rename
+2.DML--->Insert,update,delete,lock
+3.DCL--->grant,revoke
+4.TCL--->commit,rollback,savepoint
+5.DQL--->select
+
+1.DDL(Data Definition Language):
+------------------------------------
+*create: by using this command to create a new databases, tables, views,indexes,triggers,stored procedures.etc.
+ syntax:create database
+ ------
+ create databse database-name;
+ eg: create database da3;
+ create table
+ -------------
+ create table table-name(
+ column-name data-type size constraint, ---->constraint is optional
+ column-name data-type size constraint,
+  ------------------------------------
+  );
+
+*Alter: by using this alter command to modify the structure of an exixting database object.
+*drop: by using this command we can drop existing databse object or table perminently
+*truncate: by using this command to delete all rows present in a table.
+*rename: it is used to rename the tablenames or column names.. etc
+
+2.DML(Data Manipulation Language):
+-----------------------------------
+*Insert: By using this command we can insert some records into a table.
+*update: by using this command we can update the exixting records based on some conditions.
+*delete: bu using this command we can delete the existing table records based on some conditions.
+*lock: it can be used to control access to a resource, ensuring that only one transaction can access it at a time of preventing conflicts.
+
+3.DCL(Data Control Language):
+--------------------------------
+*grant: this command is used to give specific permission to a user in database this permission might be include the ability to select or update or delete 
+the data as we create or drop tables.
+*revoke: revoke command is used to take-away granted permissions from user.
+
+4.TCL(Transaction Control Language):
+-----------------------------------
+*commit: this command is used to perminently save the changes made during the transaction. once transaction is commited it changes became perminent and 
+         visible to other transactions.
+*rollback: if an error occurs or if transaction needs to be canclled for any reason rollback is issued to revert the database. 
+           in simple it is used to undo operations changes made during the current transactions.
+*savepoint: it is used to set a point within a transaction ho which you can later rollback.
+
+5.DQL(Data Query language):
+------------------------------
+*select: this command is used to retrieve data from one or more tables in databases.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| da3                |
+| emp                |
+| filedb             |
+| information_schema |
+| mysql              |
+| performance_schema |
+| student            |
+| sys                |
+| test               |
+| testdb             |
++--------------------+
+10 rows in set (0.01 sec)
+
+mysql> CREATE DATABASE DA;
+Query OK, 1 row affected (0.04 sec)
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| da                 |
+| da3                |
+| emp                |
+| filedb             |
+| information_schema |
+| mysql              |
+| performance_schema |
+| student            |
+| sys                |
+| test               |
+| testdb             |
++--------------------+
+11 rows in set (0.00 sec)
+
+mysql> USE DA;
+Database changed
+mysql> create table employee(
+    -> empId char(5),
+    -> fname varchar(100),
+    -> lname varchar(30),
+    -> age int,
+    -> doj date,
+    -> address tinytext,
+    -> dept varchar(20)
+    -> );
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> -- To show the table description
+mysql> desc employee;
++---------+--------------+------+-----+---------+-------+
+| Field   | Type         | Null | Key | Default | Extra |
++---------+--------------+------+-----+---------+-------+
+| empId   | char(5)      | YES  |     | NULL    |       |
+| fname   | varchar(100) | YES  |     | NULL    |       |
+| lname   | varchar(30)  | YES  |     | NULL    |       |
+| age     | int          | YES  |     | NULL    |       |
+| doj     | date         | YES  |     | NULL    |       |
+| address | tinytext     | YES  |     | NULL    |       |
+| dept    | varchar(20)  | YES  |     | NULL    |       |
++---------+--------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> show columns from employee;
++---------+--------------+------+-----+---------+-------+
+| Field   | Type         | Null | Key | Default | Extra |
++---------+--------------+------+-----+---------+-------+
+| empId   | char(5)      | YES  |     | NULL    |       |
+| fname   | varchar(100) | YES  |     | NULL    |       |
+| lname   | varchar(30)  | YES  |     | NULL    |       |
+| age     | int          | YES  |     | NULL    |       |
+| doj     | date         | YES  |     | NULL    |       |
+| address | tinytext     | YES  |     | NULL    |       |
+| dept    | varchar(20)  | YES  |     | NULL    |       |
++---------+--------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> Terminal close -- exit!
