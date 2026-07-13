@@ -1,0 +1,908 @@
+mysql> use da;
+Database changed
+
+Joins
+=======
+a join in mysql is used to combine rows from two or more tables based on related columns.
+
+example:
+--------
+employee table-->employee details
+departments table---> departments details
+if you want to see which employee belonging to which department you need to join these two tables.
+
+why do we need joins?
+---------------------
+to fetch data from multiple tables in a single query.
+to reduce data duplication instead of keeping everything in one table.
+to implement relationships like (one-to-one,one-to-many,many-to-one,many-to-many)in databases.
+to generate reports and analytics combine different data sets.
+
+Types of joins:
+----------------
+1.inner join:
+---------------
+which it returns only rows that have matching values in both the tables.
+Syntax:
+-------
+select columns
+from table1
+inner join table2
+on table1.common_column=table2.common_column;
+
+2.left join:
+-------------
+returns all rows from the left table and the matched rows from the right table if no match null values appear for right table column.
+Syntax:
+--------
+select columns
+from table1
+left join table2
+on table1.common_column=table2.common_column;
+
+3.right join:
+--------------
+returns all rows from the right table and the matched rows from the left table if no match null values appear for left table column.
+Syntax:
+--------
+select columns
+from table1
+right join table2
+on table1.common_column=table2.common_column;
+
+4.full join:
+--------------
+to simulate use union of left join and right join 
+Syntax:
+--------
+select columns
+from table1
+left join table2
+on table1.common_column=table2.common_column
+union
+select columns
+from table1
+right join table2
+on table1.common_column=table2.common_column;
+
+5.cross join:
+---------------
+returns cartesian product- every row from the first table with every row from the second table.
+Syntax:
+-------
+select columns
+from table1
+cross join table2;
+
+6.self join:
+-------------
+a table joined with itself
+Syntax:
+--------
+select a.columns,b.columns
+from table1 a
+inner join table1 b
+on a.common_column=b.common_column;
+
+
+mysql> CREATE TABLE TAB1(NUMID INT(3));
+Query OK, 0 rows affected, 1 warning (0.04 sec)
+
+mysql> CREATE TABLE TAB2(NUMID INT(3));
+Query OK, 0 rows affected, 1 warning (0.07 sec)
+
+mysql> INSERT INTO TAB1 VALUES(10),(11),(12),(14);
+Query OK, 4 rows affected (0.04 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO TAB2 VALUES(11),(12),(13),(15);
+Query OK, 4 rows affected (0.04 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM TAB1;
++-------+
+| NUMID |
++-------+
+|    10 |
+|    11 |
+|    12 |
+|    14 |
++-------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM TAB2;
++-------+
+| NUMID |
++-------+
+|    11 |
+|    12 |
+|    13 |
+|    15 |
++-------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * TAB1
+    -> INNER JOIN TAB2
+    -> ON TAB1.NUMID=TAB2.NUMID;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TAB1
+INNER JOIN TAB2
+ON TAB1.NUMID=TAB2.NUMID' at line 1
+mysql> SELECT * FROM TAB1
+    -> INNER JOIN TAB2
+    -> ON
+    -> TAB1.NUMID=TAB2.NUMID;
++-------+-------+
+| NUMID | NUMID |
++-------+-------+
+|    11 |    11 |
+|    12 |    12 |
++-------+-------+
+2 rows in set (0.00 sec)
+
+mysql> -- LEFT JOIN
+mysql> SELECT * FROM TAB1
+    -> LEFT JOIN TAB2
+    -> ON
+    -> TAB1.NUMID=TAB2.NUMID;
++-------+-------+
+| NUMID | NUMID |
++-------+-------+
+|    10 |  NULL |
+|    11 |    11 |
+|    12 |    12 |
+|    14 |  NULL |
++-------+-------+
+4 rows in set (0.00 sec)
+
+mysql> -- RIGHT JOIN
+mysql> SELECT * FROM TAB1
+    -> RIGHT JOIN TAB2
+    -> ON TAB1.NUMID=TAB2.NUMID;
++-------+-------+
+| NUMID | NUMID |
++-------+-------+
+|    11 |    11 |
+|    12 |    12 |
+|  NULL |    13 |
+|  NULL |    15 |
++-------+-------+
+4 rows in set (0.00 sec)
+
+mysql> -- FULL JOIN
+mysql> SELECT * FROM TAB1
+    -> LEFT JOIN TAB2
+    -> ON
+    -> TAB1.NUMID=TAB2.NUMID;
++-------+-------+
+| NUMID | NUMID |
++-------+-------+
+|    10 |  NULL |
+|    11 |    11 |
+|    12 |    12 |
+|    14 |  NULL |
++-------+-------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM TAB1
+    -> LEFT JOIN TAB2
+    -> ON
+    -> TAB1.NUMID=TAB2.NUMID
+    -> UNION
+    -> SELECT * FROM TAB1
+    -> RIGHT JOIN TAB2
+    -> ON TAB1.NUMID=TAB2.NUMID;
++-------+-------+
+| NUMID | NUMID |
++-------+-------+
+|    10 |  NULL |
+|    11 |    11 |
+|    12 |    12 |
+|    14 |  NULL |
+|  NULL |    13 |
+|  NULL |    15 |
++-------+-------+
+6 rows in set (0.00 sec)
+
+mysql> -- CROSS JOIN
+mysql> SELECTJOIN FROM TAB1
+    -> CROSS JOIN TAB2;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SELECTJOIN FROM TAB1
+CROSS JOIN TAB2' at line 1
+mysql> SELECT * FROM TAB1
+    -> CROSS JOIN TAB2;
++-------+-------+
+| NUMID | NUMID |
++-------+-------+
+|    14 |    11 |
+|    12 |    11 |
+|    11 |    11 |
+|    10 |    11 |
+|    14 |    12 |
+|    12 |    12 |
+|    11 |    12 |
+|    10 |    12 |
+|    14 |    13 |
+|    12 |    13 |
+|    11 |    13 |
+|    10 |    13 |
+|    14 |    15 |
+|    12 |    15 |
+|    11 |    15 |
+|    10 |    15 |
++-------+-------+
+16 rows in set (0.00 sec)
+
+mysql> -- SHOULD CREATE 3 TABLE AND PERFORM JOINS
+mysql> SHOW TABLES;
++---------------------+
+| Tables_in_da        |
++---------------------+
+| backupemployee      |
+| company_staff       |
+| course              |
+| course_completed    |
+| dept                |
+| emp                 |
+| employee            |
+| employee_attendance |
+| employees           |
+| orders              |
+| product             |
+| products            |
+| sales               |
+| student             |
+| students            |
+| studentscores       |
+| tab1                |
+| tab2                |
++---------------------+
+18 rows in set (0.00 sec)
+
+mysql> USE DA3;
+Database changed
+mysql> 
+mysql> CREATE TABLE Employees (
+    ->     emp_id INT PRIMARY KEY,
+    ->     name VARCHAR(100),
+    ->     department_id INT,
+    ->     salary DECIMAL(10,2)
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> CREATE TABLE Departments (
+    ->     department_id INT PRIMARY KEY,
+    ->     department_name VARCHAR(100)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> 
+mysql> CREATE TABLE Projects (
+    ->     project_id INT PRIMARY KEY,
+    ->     project_name VARCHAR(100),
+    ->     emp_id INT
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> 
+mysql> INSERT INTO Departments (department_id, department_name) VALUES
+    -> (1, 'Human Resources'),
+    -> (2, 'Engineering'),
+    -> (3, 'Marketing'),
+    -> (4, 'Finance'),
+    -> (5, 'Operations');
+Query OK, 5 rows affected (0.04 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> 
+mysql> INSERT INTO Employees (emp_id, name, department_id, salary) VALUES
+    -> (101, 'Arjun', 1, 50000),
+    -> (102, 'Bhavana', 2, 65000),
+    -> (103, 'Charan', 2, 72000),
+    -> (104, 'Divya', 3, 45000),
+    -> (105, 'Eswar', NULL, 40000),
+    -> (106, 'Farhan', 4, 55000),
+    -> (107, 'Gowri', 2, 62000),
+    -> (108, 'Harish', 5, 48000),
+    -> (109, 'Ishita', NULL, 53000),
+    -> (110, 'Jagan', 3, 60000);
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> 
+mysql> 
+mysql> INSERT INTO Projects (project_id, project_name, emp_id) VALUES
+    -> (201, 'Website Redesign', 102),
+    -> (202, 'Mobile Banking App', 103),
+    -> (203, 'Marketing Campaign', 104),
+    -> (204, 'Payroll System', 106),
+    -> (205, 'Backend Optimization', 107),
+    -> (206, 'Cloud Migration', 102),
+    -> (207, 'Customer Analytics', 110),
+    -> (208, 'Inventory System', NULL);
+Query OK, 8 rows affected (0.01 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> SELECT * FROM DEPARTMENTS;
++---------------+-----------------+
+| department_id | department_name |
++---------------+-----------------+
+|             1 | Human Resources |
+|             2 | Engineering     |
+|             3 | Marketing       |
+|             4 | Finance         |
+|             5 | Operations      |
++---------------+-----------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM EMPLOYEES;
++--------+---------+---------------+----------+
+| emp_id | name    | department_id | salary   |
++--------+---------+---------------+----------+
+|    101 | Arjun   |             1 | 50000.00 |
+|    102 | Bhavana |             2 | 65000.00 |
+|    103 | Charan  |             2 | 72000.00 |
+|    104 | Divya   |             3 | 45000.00 |
+|    105 | Eswar   |          NULL | 40000.00 |
+|    106 | Farhan  |             4 | 55000.00 |
+|    107 | Gowri   |             2 | 62000.00 |
+|    108 | Harish  |             5 | 48000.00 |
+|    109 | Ishita  |          NULL | 53000.00 |
+|    110 | Jagan   |             3 | 60000.00 |
++--------+---------+---------------+----------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT * FROM PROJECTS;
++------------+----------------------+--------+
+| project_id | project_name         | emp_id |
++------------+----------------------+--------+
+|        201 | Website Redesign     |    102 |
+|        202 | Mobile Banking App   |    103 |
+|        203 | Marketing Campaign   |    104 |
+|        204 | Payroll System       |    106 |
+|        205 | Backend Optimization |    107 |
+|        206 | Cloud Migration      |    102 |
+|        207 | Customer Analytics   |    110 |
+|        208 | Inventory System     |   NULL |
++------------+----------------------+--------+
+8 rows in set (0.00 sec)
+
+mysql> SELECT * FROM DEPARTMENTS
+    -> INNER JOIN EMPLOYEES
+    -> ON DEPARTMENTS.DEPARTMENT_ID=EMPLOYEES.DEPARTMENT_ID;
++---------------+-----------------+--------+---------+---------------+----------+
+| department_id | department_name | emp_id | name    | department_id | salary   |
++---------------+-----------------+--------+---------+---------------+----------+
+|             1 | Human Resources |    101 | Arjun   |             1 | 50000.00 |
+|             2 | Engineering     |    102 | Bhavana |             2 | 65000.00 |
+|             2 | Engineering     |    103 | Charan  |             2 | 72000.00 |
+|             3 | Marketing       |    104 | Divya   |             3 | 45000.00 |
+|             4 | Finance         |    106 | Farhan  |             4 | 55000.00 |
+|             2 | Engineering     |    107 | Gowri   |             2 | 62000.00 |
+|             5 | Operations      |    108 | Harish  |             5 | 48000.00 |
+|             3 | Marketing       |    110 | Jagan   |             3 | 60000.00 |
++---------------+-----------------+--------+---------+---------------+----------+
+8 rows in set (0.00 sec)
+
+mysql> SELECT NAME FROM DEPARTMENTS
+    -> INNER JOIN EMPLOYEES
+    -> ON DEPARTMENTS.DEPARTMENT_ID=EMPLOYEES.DEPARTMENT_ID;
++---------+
+| NAME    |
++---------+
+| Arjun   |
+| Bhavana |
+| Charan  |
+| Divya   |
+| Farhan  |
+| Gowri   |
+| Harish  |
+| Jagan   |
++---------+
+8 rows in set (0.00 sec)
+
+mysql> SELECT NAME FROM EMPLOYEES
+    -> INNER JOIN PROJECTS
+    -> ON EMPLOYEES.EMP_ID=PROJECTS.EMP_ID;
++---------+
+| NAME    |
++---------+
+| Bhavana |
+| Charan  |
+| Divya   |
+| Farhan  |
+| Gowri   |
+| Bhavana |
+| Jagan   |
++---------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT E.EMP_ID,E.NAME,D.DEPARTMENT_NAME
+    -> FROM EMPLOYEES E
+    -> INNER JOIN DEPARTMENTS D
+    -> ON E.DEPARTMENTS_ID=D.DEPARTMENTS_ID;
+ERROR 1054 (42S22): Unknown column 'E.DEPARTMENTS_ID' in 'on clause'
+mysql> SELECT E.EMP_ID,E.NAME,D.DEPARTMENT_NAME
+    -> FROM EMPLOYEES E
+    -> INNER JOIN DEPARTMENTS D
+    -> ON E.DEPARTMENT_ID=D.DEPARTMENT_ID;
++--------+---------+-----------------+
+| EMP_ID | NAME    | DEPARTMENT_NAME |
++--------+---------+-----------------+
+|    101 | Arjun   | Human Resources |
+|    102 | Bhavana | Engineering     |
+|    103 | Charan  | Engineering     |
+|    104 | Divya   | Marketing       |
+|    106 | Farhan  | Finance         |
+|    107 | Gowri   | Engineering     |
+|    108 | Harish  | Operations      |
+|    110 | Jagan   | Marketing       |
++--------+---------+-----------------+
+8 rows in set (0.00 sec)
+
+mysql> SEELCT DISTINCT E.EMP_ID,E.NAME
+    -> FROM EMPLOYEES E
+    -> INNER JOIN PROJECTS P
+    -> ON E.EMP_ID=P.EMP_ID;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SEELCT DISTINCT E.EMP_ID,E.NAME
+FROM EMPLOYEES E
+INNER JOIN PROJECTS P
+ON E.EMP_' at line 1
+mysql> SELECT DISTINCT E.EMP_ID,E.NAME
+    -> FROM EMPLOYEES E
+    -> INNER JOIN PROJECTS P
+    -> ON E.EMP_ID=P.EMP_ID;
++--------+---------+
+| EMP_ID | NAME    |
++--------+---------+
+|    102 | Bhavana |
+|    103 | Charan  |
+|    104 | Divya   |
+|    106 | Farhan  |
+|    107 | Gowri   |
+|    110 | Jagan   |
++--------+---------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT E.NAME,P.PROJECT_NAME
+    -> FROM EMPLOYEES E
+    -> INNER JOIN PROJECTS P
+    -> ON E.EMP_ID=P.EMP_ID;
++---------+----------------------+
+| NAME    | PROJECT_NAME         |
++---------+----------------------+
+| Bhavana | Website Redesign     |
+| Charan  | Mobile Banking App   |
+| Divya   | Marketing Campaign   |
+| Farhan  | Payroll System       |
+| Gowri   | Backend Optimization |
+| Bhavana | Cloud Migration      |
+| Jagan   | Customer Analytics   |
++---------+----------------------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT E.EMP_ID,E.NAME,D.DEPARTMENT_NAME
+    -> FROM EMPLOYEES E
+    -> LEFT JOIN
+    -> DEPARTMENTS D
+    -> ON E.DEPARTMENT_ID=D.DEPARTMENT_ID;
++--------+---------+-----------------+
+| EMP_ID | NAME    | DEPARTMENT_NAME |
++--------+---------+-----------------+
+|    101 | Arjun   | Human Resources |
+|    102 | Bhavana | Engineering     |
+|    103 | Charan  | Engineering     |
+|    104 | Divya   | Marketing       |
+|    105 | Eswar   | NULL            |
+|    106 | Farhan  | Finance         |
+|    107 | Gowri   | Engineering     |
+|    108 | Harish  | Operations      |
+|    109 | Ishita  | NULL            |
+|    110 | Jagan   | Marketing       |
++--------+---------+-----------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT E.NAME,P.PROJECT_NAME
+    -> FROM EMPLOYEES E
+    -> LEFT JOIN PROJECTS P
+    -> ON E.EMP_ID=P.EMP_ID;
++---------+----------------------+
+| NAME    | PROJECT_NAME         |
++---------+----------------------+
+| Arjun   | NULL                 |
+| Bhavana | Cloud Migration      |
+| Bhavana | Website Redesign     |
+| Charan  | Mobile Banking App   |
+| Divya   | Marketing Campaign   |
+| Eswar   | NULL                 |
+| Farhan  | Payroll System       |
+| Gowri   | Backend Optimization |
+| Harish  | NULL                 |
+| Ishita  | NULL                 |
+| Jagan   | Customer Analytics   |
++---------+----------------------+
+11 rows in set (0.00 sec)
+
+mysql> SELECT D.DEPARTMENT_NAME,E.NAME
+    -> FROM DEPARTMENTS D
+    -> LEFT JOIN EMPLOYEES E
+    -> ON D.DEPARTMENT_ID=E.DEPARTMENT_ID;
++-----------------+---------+
+| DEPARTMENT_NAME | NAME    |
++-----------------+---------+
+| Human Resources | Arjun   |
+| Engineering     | Gowri   |
+| Engineering     | Charan  |
+| Engineering     | Bhavana |
+| Marketing       | Jagan   |
+| Marketing       | Divya   |
+| Finance         | Farhan  |
+| Operations      | Harish  |
++-----------------+---------+
+8 rows in set (0.00 sec)
+
+mysql> SELECT D.DEPARTMENT_NAME,E.NAME
+    -> FROM EMPLOYEES E
+    -> RIGHT JOIN DEPARTMENTS D
+    -> ON E.DEPARTMENT_ID=D.DEPARTMENTS_ID;
+ERROR 1054 (42S22): Unknown column 'D.DEPARTMENTS_ID' in 'on clause'
+mysql> SELECT D.DEPARTMENT_NAME,E.NAME
+    -> FROM EMPLOYEES E
+    -> RIGHT JOIN DEPARTMENTS D
+    -> ON E.DEPARTMENT_ID=D.DEPARTMENT_ID;
++-----------------+---------+
+| DEPARTMENT_NAME | NAME    |
++-----------------+---------+
+| Human Resources | Arjun   |
+| Engineering     | Gowri   |
+| Engineering     | Charan  |
+| Engineering     | Bhavana |
+| Marketing       | Jagan   |
+| Marketing       | Divya   |
+| Finance         | Farhan  |
+| Operations      | Harish  |
++-----------------+---------+
+8 rows in set (0.00 sec)
+
+mysql> SELECT P.PROJECT_NAME,
+    -> E.NAME
+    -> FROM EMPLOYEES E
+    -> RIGHT JOIN PROJECTS P
+    -> ON E.EMP_ID=P.EMP_ID;
++----------------------+---------+
+| PROJECT_NAME         | NAME    |
++----------------------+---------+
+| Website Redesign     | Bhavana |
+| Mobile Banking App   | Charan  |
+| Marketing Campaign   | Divya   |
+| Payroll System       | Farhan  |
+| Backend Optimization | Gowri   |
+| Cloud Migration      | Bhavana |
+| Customer Analytics   | Jagan   |
+| Inventory System     | NULL    |
++----------------------+---------+
+8 rows in set (0.00 sec)
+
+mysql> SELECT E.NAME
+    -> D.DEPARTMENT_NAME
+    -> FROM DEPARTMENTS D
+    -> RIGHT JOIN EMPLOYEES E
+    -> ON D.DEPARTMENT_ID=E.DEPARTMENT_ID;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.DEPARTMENT_NAME
+FROM DEPARTMENTS D
+RIGHT JOIN EMPLOYEES E
+ON D.DEPARTMENT_ID=E.' at line 2
+mysql> SELECT E.NAME,
+    -> D.DEPARTMENT_NAME
+    -> FROM DEPARTMENTS D
+    -> RIGHT JOIN EMPLOYEES E
+    -> ON D.DEPARTMENT_ID=E.DEPARTMENT_ID;
++---------+-----------------+
+| NAME    | DEPARTMENT_NAME |
++---------+-----------------+
+| Arjun   | Human Resources |
+| Bhavana | Engineering     |
+| Charan  | Engineering     |
+| Divya   | Marketing       |
+| Eswar   | NULL            |
+| Farhan  | Finance         |
+| Gowri   | Engineering     |
+| Harish  | Operations      |
+| Ishita  | NULL            |
+| Jagan   | Marketing       |
++---------+-----------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT E.NAME,D.DEPARTMENT_NAME
+    -> FROM EMPLOYEES E
+    -> LEFT JOIN DEPARTMENTS D
+    -> ON E.DEPARTMENT_ID=D.DEPARTMENT_NAME
+    -> FROM EMPLOYEES E
+    -> ^C
+mysql> SELECT E.NAME,D.DEPARTMENT_NAME
+    -> FROM EMPLOYEES E
+    -> LEFT JOIN DEPARTMENTS D
+    -> ON E.DEPARTMENT_ID=D.DEPARTMENT_NAME
+    -> UNION
+    -> SELECT E.NAME,D.DEPARTMENT_NAME
+    -> FROM EMPLOYEES E
+    -> RIGHT JOIN DEPARTMENTS D
+    -> ON E.DEPARTMENTS_ID=D.DEPARTMENTS_ID;
+ERROR 1054 (42S22): Unknown column 'E.DEPARTMENTS_ID' in 'on clause'
+mysql> SELECT E.NAME,D.DEPARTMENT_NAME
+    -> FROM EMPLOYEES E
+    -> LEFT JOIN DEPARTMENTS D
+    -> ON E.DEPARTMENT_ID=D.DEPARTMENT_NAME
+    -> UNION
+    -> SELECT E.NAME,D.DEPARTMENT_NAME
+    -> FROM EMPLOYEES E
+    -> RIGHT JOIN DEPARTMENTS D
+    -> ON E.DEPARTMENT_ID=D.DEPARTMENT_ID;
++---------+-----------------+
+| NAME    | DEPARTMENT_NAME |
++---------+-----------------+
+| Arjun   | NULL            |
+| Bhavana | NULL            |
+| Charan  | NULL            |
+| Divya   | NULL            |
+| Eswar   | NULL            |
+| Farhan  | NULL            |
+| Gowri   | NULL            |
+| Harish  | NULL            |
+| Ishita  | NULL            |
+| Jagan   | NULL            |
+| Arjun   | Human Resources |
+| Gowri   | Engineering     |
+| Charan  | Engineering     |
+| Bhavana | Engineering     |
+| Jagan   | Marketing       |
+| Divya   | Marketing       |
+| Farhan  | Finance         |
+| Harish  | Operations      |
++---------+-----------------+
+18 rows in set, 5 warnings (0.00 sec)
+
+mysql> SELECT E.NAME,D.DEPARTMENT_NAME
+    -> FROM EMPLOYEES E
+    -> LEFT JOIN DEPARTMENTS D
+    -> ON E.DEPARTMENT_ID=D.DEPARTMENT_ID
+    -> UNION
+    -> SELECT E.NAME,D.DEPARTMENT_NAME
+    -> FROM EMPLOYEES E
+    -> RIGHT JOIN DEPARTMENTS D
+    -> ON E.DEPARTMENT_ID=D.DEPARTMENT_ID;
++---------+-----------------+
+| NAME    | DEPARTMENT_NAME |
++---------+-----------------+
+| Arjun   | Human Resources |
+| Bhavana | Engineering     |
+| Charan  | Engineering     |
+| Divya   | Marketing       |
+| Eswar   | NULL            |
+| Farhan  | Finance         |
+| Gowri   | Engineering     |
+| Harish  | Operations      |
+| Ishita  | NULL            |
+| Jagan   | Marketing       |
++---------+-----------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT E.NAME,P.PROJECT_NAME
+    -> FROM EMPLOYEES E
+    -> LEFT JOIN PROJECTS P
+    -> ON E.EMP_ID=P.EMP_ID
+    -> UNION
+    -> SELECT E.NAME,P.PROJECT_NAME
+    -> FROM EMPLOYEES E
+    -> RIGHT JOIN PROJECTS P
+    -> ON E.EMP_ID=E.EMP_ID;
++---------+----------------------+
+| NAME    | PROJECT_NAME         |
++---------+----------------------+
+| Arjun   | NULL                 |
+| Bhavana | Cloud Migration      |
+| Bhavana | Website Redesign     |
+| Charan  | Mobile Banking App   |
+| Divya   | Marketing Campaign   |
+| Eswar   | NULL                 |
+| Farhan  | Payroll System       |
+| Gowri   | Backend Optimization |
+| Harish  | NULL                 |
+| Ishita  | NULL                 |
+| Jagan   | Customer Analytics   |
+| Jagan   | Website Redesign     |
+| Ishita  | Website Redesign     |
+| Harish  | Website Redesign     |
+| Gowri   | Website Redesign     |
+| Farhan  | Website Redesign     |
+| Eswar   | Website Redesign     |
+| Divya   | Website Redesign     |
+| Charan  | Website Redesign     |
+| Arjun   | Website Redesign     |
+| Jagan   | Mobile Banking App   |
+| Ishita  | Mobile Banking App   |
+| Harish  | Mobile Banking App   |
+| Gowri   | Mobile Banking App   |
+| Farhan  | Mobile Banking App   |
+| Eswar   | Mobile Banking App   |
+| Divya   | Mobile Banking App   |
+| Bhavana | Mobile Banking App   |
+| Arjun   | Mobile Banking App   |
+| Jagan   | Marketing Campaign   |
+| Ishita  | Marketing Campaign   |
+| Harish  | Marketing Campaign   |
+| Gowri   | Marketing Campaign   |
+| Farhan  | Marketing Campaign   |
+| Eswar   | Marketing Campaign   |
+| Charan  | Marketing Campaign   |
+| Bhavana | Marketing Campaign   |
+| Arjun   | Marketing Campaign   |
+| Jagan   | Payroll System       |
+| Ishita  | Payroll System       |
+| Harish  | Payroll System       |
+| Gowri   | Payroll System       |
+| Eswar   | Payroll System       |
+| Divya   | Payroll System       |
+| Charan  | Payroll System       |
+| Bhavana | Payroll System       |
+| Arjun   | Payroll System       |
+| Jagan   | Backend Optimization |
+| Ishita  | Backend Optimization |
+| Harish  | Backend Optimization |
+| Farhan  | Backend Optimization |
+| Eswar   | Backend Optimization |
+| Divya   | Backend Optimization |
+| Charan  | Backend Optimization |
+| Bhavana | Backend Optimization |
+| Arjun   | Backend Optimization |
+| Jagan   | Cloud Migration      |
+| Ishita  | Cloud Migration      |
+| Harish  | Cloud Migration      |
+| Gowri   | Cloud Migration      |
+| Farhan  | Cloud Migration      |
+| Eswar   | Cloud Migration      |
+| Divya   | Cloud Migration      |
+| Charan  | Cloud Migration      |
+| Arjun   | Cloud Migration      |
+| Ishita  | Customer Analytics   |
+| Harish  | Customer Analytics   |
+| Gowri   | Customer Analytics   |
+| Farhan  | Customer Analytics   |
+| Eswar   | Customer Analytics   |
+| Divya   | Customer Analytics   |
+| Charan  | Customer Analytics   |
+| Bhavana | Customer Analytics   |
+| Arjun   | Customer Analytics   |
+| Jagan   | Inventory System     |
+| Ishita  | Inventory System     |
+| Harish  | Inventory System     |
+| Gowri   | Inventory System     |
+| Farhan  | Inventory System     |
+| Eswar   | Inventory System     |
+| Divya   | Inventory System     |
+| Charan  | Inventory System     |
+| Bhavana | Inventory System     |
+| Arjun   | Inventory System     |
++---------+----------------------+
+84 rows in set (0.00 sec)
+
+mysql> SELECT E.NAME,P.PROJECT_NAME
+    -> FROM EMPLOYEES E
+    -> LEFT JOIN PROJECTS P
+    -> ON E.EMP_ID=P.EMP_ID
+    -> UNION
+    -> SELECT E.NAME,P.PROJECT_NAME
+    -> FROM EMPLOYEES E
+    -> RIGHT JOIN PROJECTS P
+    -> ON E.EMP_ID=P.EMP_ID;
++---------+----------------------+
+| NAME    | PROJECT_NAME         |
++---------+----------------------+
+| Arjun   | NULL                 |
+| Bhavana | Cloud Migration      |
+| Bhavana | Website Redesign     |
+| Charan  | Mobile Banking App   |
+| Divya   | Marketing Campaign   |
+| Eswar   | NULL                 |
+| Farhan  | Payroll System       |
+| Gowri   | Backend Optimization |
+| Harish  | NULL                 |
+| Ishita  | NULL                 |
+| Jagan   | Customer Analytics   |
+| NULL    | Inventory System     |
++---------+----------------------+
+12 rows in set (0.00 sec)
+
+mysql> SELECT D.DEPARTMENT_NAME
+    -> COUNT(E.EMP_ID)AS TOTAL_EMPLOYEES
+    -> FRO DEPARTMENTS D
+    -> LEFTJOIN EMPLOYEES E
+    -> ON
+    -> D.DEPARTMENT_ID=E.DEPARTMENT_ID
+    -> GROUP BY D.DEPARTMENT_NAME;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'COUNT(E.EMP_ID)AS TOTAL_EMPLOYEES
+FRO DEPARTMENTS D
+LEFTJOIN EMPLOYEES E
+ON
+D.DE' at line 2
+mysql> SELECT D.DEPARTMENT_NAME,
+    -> COUNT(E.EMP_ID)AS TOTAL_EMPLOYEES
+    -> FROM DEPARTMENTS D
+    -> ON
+    -> D.DEPARTMENT_ID=E.DEPARTMENT_ID
+    -> GROUP BY D.DEPARTMENT_NAME;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ON
+D.DEPARTMENT_ID=E.DEPARTMENT_ID
+GROUP BY D.DEPARTMENT_NAME' at line 4
+mysql> SELECT D.DEPARTMENT_NAME,
+    -> COUNT(E.EMP_ID)AS TOTAL_EMPLOYEES
+    -> FROM DEPARTMENTS D
+    -> LEFT JOIN EMPLOYEES E
+    -> ON D.DEPARTMENT_ID=E.DEPARTMENT_ID
+    -> GROUP BY D.DEPARTMENT_NAME;
++-----------------+-----------------+
+| DEPARTMENT_NAME | TOTAL_EMPLOYEES |
++-----------------+-----------------+
+| Human Resources |               1 |
+| Engineering     |               3 |
+| Marketing       |               2 |
+| Finance         |               1 |
+| Operations      |               1 |
++-----------------+-----------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT E.NAME,COUNT(P.PROJECT_ID)AS TOTAL_PROJECTS
+    -> FROM EMPLOYEES E
+    -> LEFT JOIN DEPARTMENTS D
+    -> ON E.EMP
+    -> ^C
+mysql> SELECT E.NAME,COUNT(P.PROJECT_ID)AS TOTAL_PROJECTS
+    -> FROM EMPLOYEES E
+    -> LEFT JOIN DEPARTMENTS D
+    -> ^C
+mysql> SELECT E.NAME,COUNT(P.PROJECT_ID)AS TOTAL_PROJECTS
+    -> FROM EMPLOYEES E
+    -> LEFT JOIN PROJECTS P
+    -> ON E.EMP_ID=P.EMP_ID
+    -> GROUP BY E.NAME;
++---------+----------------+
+| NAME    | TOTAL_PROJECTS |
++---------+----------------+
+| Arjun   |              0 |
+| Bhavana |              2 |
+| Charan  |              1 |
+| Divya   |              1 |
+| Eswar   |              0 |
+| Farhan  |              1 |
+| Gowri   |              1 |
+| Harish  |              0 |
+| Ishita  |              0 |
+| Jagan   |              1 |
++---------+----------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT D.DEPARTMENT_NAME,SUM(E.EMP_ID)AS TOTAL_SALARY
+    -> FROM DEPARTMENTS D
+    -> LEFT JOIN EMPLOYEES E
+    -> ON D.DEPARTMENT_ID=E.DEPARTMENT_ID
+    -> GROUP BY D.DEPARTMENT_NAME;
++-----------------+--------------+
+| DEPARTMENT_NAME | TOTAL_SALARY |
++-----------------+--------------+
+| Human Resources |          101 |
+| Engineering     |          312 |
+| Marketing       |          214 |
+| Finance         |          106 |
+| Operations      |          108 |
++-----------------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT E.NAME,SUM(E.EMP_ID)AS TOTAL_SALARY
+    -> FROM DEPARTMENTS D
+    -> LEFT JOIN EMPLOYEES E
+    -> ON D.DEPARTMENT_ID=E.DEPARTMENT_ID
+    -> GROUP BY D.DEPARTMENT_NAME;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'da3.E.name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> Terminal close -- exit!
